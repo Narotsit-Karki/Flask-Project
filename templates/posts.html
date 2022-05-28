@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+<style type="text/css">
+      .container{
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 5px;
+        margin: 5%;
+        width: 90%;
+        }
+
+
+</style>
+<!--    <div class = "container">-->
+{% for post in post_datas %}
+<div class = 'container' style="padding: 1rem;">
+    <div class="card text-black" style="width: '80%'; ">
+        <div class="card-body">
+            <h5 class="card-title">{{post['Title']}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@{{ post.Author }}</h6>
+            <h6 class="card-subtitle mb-1 text-muted">{{ post.Date }}</h6>
+            <p class="card-text">{{post.Content}}</p>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=#{{post.Author}}
+                    aria-expanded="false" aria-controls="collapseExample">
+                Comments
+            </button>
+
+            <a href="#" class="btn btn-danger">View</a>
+            {% for comment in post.Comments %}
+            <div class="collapse" id={{post.Author}} style="padding : 1rem;">
+
+                <div class="card card-body" style="padding: 1rem;">
+                    <h6 class="card-subtitle mb-1 text-muted">@{{ comment.User }}</h6>
+                    <h6 class= "card-subtitle mb-0 text-muted">{{comment.Date}}</h6>
+                    <p class="card-text">{{comment.Comment}}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="collapse" id={{post.Author}} style="padding : 1rem;">
+                <div class="card card-body" style="padding: 1rem;">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Write your comment</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Default"
+                               aria-describedby="inputGroup-sizing-default" style="width:60%;">
+                        <div>
+                            <a href="#" class="btn btn-success">Submit</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
+<!--    </div>-->
+{% endblock content %}
+
