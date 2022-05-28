@@ -24,7 +24,7 @@ post_datas = [
             },
             {
                 'User':'Bhuvray',
-                'Comment': 'What a bad idea 😂',
+                'Comment': 'What a bad idea 😂 😂',
                 'Date': 'June 1, 2022'
             },
         ]
@@ -106,5 +106,6 @@ def register():
 
     return render_template('register.html',form = form, title = 'Register')
 
+
 if __name__ == '__main__':
-    app.run(debug=True,host='192.168.1.12',port= 80)
+    app.run(debug=True,host='192.168.137.162',port= 8000)

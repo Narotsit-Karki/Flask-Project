@@ -5,9 +5,13 @@
     .container{
         border-radius: 5px;
         background-color: #f2f2f2;
+        
         padding: 5px;
-        margin: 5%;
-        width: 90%;
+        /*margin: 2%;*/
+        width:  70%;
+        /*height: 50%;*/
+        margin-top: 3%;
+        align-content: center;
         }
      .form-group{
         padding: 5px;
@@ -16,8 +20,9 @@
 
 </style>
 
-<div class = "container" style="width: 90%">
-<form method = "POST" action="">
+<div class = "container">
+
+<form method = "POST" action="/home">
          {{ form.hidden_tag() }}
 <!--         adding csrf token-->
 
@@ -27,13 +32,31 @@
                 <div class = "form-group">
                      <div class = "form-group">
                     {{ form.email.label(class = "form-control-label") }}
-                    {{ form.email(class = "form-control form-contorl-md", placeholder = "Enter your Email...") }}
-
+                     {% if form.email.errors %}
+                        {{ form.email(class = "form-control form-control-lg is-invalid") }}
+                        <div class = "invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span> {{ error }} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class = "form-control form-contorl-md", placeholder = "Enter your Email...") }}
+                    {% endif %}
                 </div>
                      <div class = "form-group">
                     {{ form.password.label(class = "form-control-label") }}
-                    {{ form.password(class = "form-control form-control-md", placeholder = "Enter your Password...") }}
+                    {% if form.password.errors %}
+                    {{ form.email(class = "form-control form-control-lg is-invalid")}}
+                        <div class= "invalid-feedback">
+                        {% for error in form.password.errors %}
+                        <span> {{error}} </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
 
+                        {{form.password(class = "form-control form-control-md", placeholder = "Enter your Password...") }}
+                    {% endif %}
+                
                 </div>
             </legend>
         </fieldset>
@@ -44,7 +67,7 @@
 </div>
 
 <div class = "border-top pt-3">
-    <small class = "text-muted">
+    <small class = "text-muted" style="margin-left: 15%;">
         Dont Have an Account ? <a class = "ml-2" href = "{{url_for('register')}}">
         Register
     </a>
