@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+    .content-section {
+  width: 90%;
+  #height: 80%;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  overflow: hidden;
+  margin-top: 10%;
+  margin-bottom: 1%;
+  margin-left: 5%;
+}
+
+.content-section:before {
+  content: "";
+  position: absolute;
+  background: inherit;
+
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
+  filter: blur(10px);
+  margin: -20px;
+}
+
+     .form-group{
+        padding: 5px;
+        }
+
+</style>
+<body background= "/static/background.jpg">
+<div class = "content-section">
+<form method = "POST" action="">
+         {{ form.hidden_tag() }}
+
+        <fieldset class = "form-group">
+            <legend class = "border-bottom mb-4">
+                New Post
+                <div class = "form-group">
+                     <div class = "form-group">
+                    {{ form.title.label(class = "form-control-label") }}
+                     {% if form.title.errors %}
+                        {{ form.title(class = "form-control form-control-lg is-invalid") }}
+                        <div class = "invalid-feedback">
+                            {% for error in form.title.errors %}
+                                <span> {{ error }} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.title(class = "form-control form-contorl-md", placeholder = "Enter your title...") }}
+                    {% endif %}
+                </div>
+                     <div class = "form-group">
+                    {{ form.content.label(class = "form-control-label") }}
+                    {% if form.content.errors %}
+                    {{ form.content(class = "form-control form-control-lg is-invalid")}}
+                        <div class= "invalid-feedback">
+                        {% for error in form.content.errors %}
+                        <span> {{error}} </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+
+                        {{form.content(class = "form-control form-control-md", placeholder = "Enter your Content...",style ='height: 150px;') }}
+                    {% endif %}
+
+                </div>
+                </div>
+            </legend>
+        </fieldset>
+    <div class = "form-group" style="padding: 2%;">
+            {{ form.submit(class = "btn btn-primary") }}
+    </div>
+</form>
+</div>
+<body>
+{% endblock content %}
+
