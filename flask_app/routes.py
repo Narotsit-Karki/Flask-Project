@@ -103,7 +103,8 @@ def update_profile_pic(profile_pic):
 @login_required # to prevent from not logged users to not to get account.html webpage
 def account():
     form = Update_Account_Form()
-
+    post = Post.query.filter_by(user_id=current_user.id)
+    comment = Comments.query.all()
 
     if form.validate_on_submit():
         if form.profile_pic.data:
@@ -124,7 +125,7 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    return render_template('user_account.html',title="Acount",form = form ,image_file = url_for('static',filename='profile_pics/' + current_user.image_file))
+    return render_template('user_account.html',title="Acount",form = form , post_datas = post, comments = comment , image_file = url_for('static',filename='profile_pics/' + current_user.image_file))
 
 @app.route('/posts/new',methods=['GET','POST'])
 @login_required
@@ -139,7 +140,7 @@ def new_post():
     return render_template('create_post.html',title = 'New Post',form=form)
 
 @app.route('/create-comment/<int:post_id>',methods = ['POST'])
-@login_required
+
 def create_comment(post_id):
     text = request.form.get('text')
     post = Post.query.filter_by(id = post_id).first()
