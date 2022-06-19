@@ -91,22 +91,22 @@
 
 
 
-            <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.id}}
+            <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.pid}}
                     aria-expanded="false" aria-controls="collapseExample">
                 <i class = "fa fa-comments-o" style="font-size: 190%;color:purple"></i>
             </button>
 
-            <div class="collapse" id= post_{{post.id}} style="padding : 1rem;">
+            <div class="collapse" id= post_{{post.pid}} style="padding : 1rem;">
 
                 <div class="card card-body" style="padding: 1rem;">
-                    <form method="POST" action="/create-comment/{{post.id}}">
+                    <form method="POST" action="/create-comment/{{post.pid}}">
                         <div class="input-group mb-3">
                             <input type = "text" id = "text" name = "text" class = "form-control form-control-md" placeholder=" Write your comment" required />
                             <button type = "submit" class = "btn btn-success">Submit</button>
 
                         </div>
             {% for comment in comments %}
-                        {% if comment.post_id == post.id %}
+                        {% if comment.post_id == post.pid %}
                             <div class="collapse" id= post_1 style="padding : 1rem;">
                                 <div class="card card-body" style="padding: 1rem;">
                                 <h6 class="card-subtitle mb-1 text-muted"> <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 4%; height: auto;"> @{{ comment.comment_user.username }}</h6>

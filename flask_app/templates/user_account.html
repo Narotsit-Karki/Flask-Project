@@ -20,6 +20,7 @@
         height: 125px;
         width: 125px;
         }
+
 </style>
 
 <div class = "content-section">
@@ -92,9 +93,8 @@
 </div>
 </body>
 <body>
-<body background="{{back_path}}">
-<div class='container' style="padding: 1%;">
-    <h2 class="text-muted" style = "text-align:center; color: white;">
+<div class='container' style="padding: 2%;height: auto; background-color:#581845;">
+    <h2  style ="text-align:center;text-color: white;">
         POSTS FROM YOU
     </h2>
 
@@ -117,23 +117,32 @@
             <p class="card-text" style = "text-align: justify; letter-spacing: 1px;" id="content">{{post.content}}</p>
 
 
-
-            <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.id}}
+            <div class = "btn-group">
+            <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.pid}}
                     aria-expanded="false" aria-controls="collapseExample">
-                <i class = "fa fa-comments-o" style="font-size: 190%;color:purple"></i>
+                <i class = "fa fa-comments-o" style="font-size: 190%;color:purple;padding-left:5%;"></i>
+                
             </button>
+            <form method = 'POST' action = "/delete-post/{{post.pid}}"style='margin-left: 5%;'>
+            <button type = "submit", class = "btn btn-danger" style="marging-left: 5%;font-size: 20px;padding: 4%;">Delete</button>
+            </form>
 
-            <div class="collapse" id= post_{{post.id}} style="padding : 1rem;">
+            <form method = 'POST' action = "/edit-post/{{post.pid}}" style="margin-left: 10%;">
+                 <button type = "submit", class = "btn btn-primary" style="font-size:21px;padding: 4%;">Edit</button>
+            </form>
+
+        </div>
+            <div class="collapse" id= post_{{post.pid}} style="padding : 1rem;">
 
                 <div class="card card-body" style="padding: 1rem;">
-                    <form method="POST" action="/create-comment/{{post.id}}">
+                    <form method="POST" action="/create-comment/{{post.pid}}">
                         <div class="input-group mb-3">
                             <input type = "text" id = "text" name = "text" class = "form-control form-control-md" placeholder=" Write your comment" required />
                             <button type = "submit" class = "btn btn-success">Submit</button>
 
                         </div>
             {% for comment in comments %}
-                        {% if comment.post_id == post.id %}
+                        {% if comment.post_id == post.pid %}
                             <div class="collapse" id= post_1 style="padding : 1rem;">
                                 <div class="card card-body" style="padding: 1rem;">
                                 <h6 class="card-subtitle mb-1 text-muted"> <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 4%; height: auto;"> @{{ comment.comment_user.username }}</h6>

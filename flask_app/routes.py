@@ -29,6 +29,7 @@ def home():
 @app.route('/posts', methods=['GET', 'POST'])
 def posts():
     post_datas = Post.query.all()
+
     comments = Comments.query.all()
 
 
@@ -103,7 +104,7 @@ def update_profile_pic(profile_pic):
 @login_required # to prevent from not logged users to not to get account.html webpage
 def account():
     form = Update_Account_Form()
-    post = Post.query.filter_by(user_id=current_user.id)
+    post = Post.query.filter_by(user_id=current_user.uid)
     comment = Comments.query.all()
 
     if form.validate_on_submit():
@@ -140,10 +141,9 @@ def new_post():
     return render_template('create_post.html',title = 'New Post',form=form)
 
 @app.route('/create-comment/<int:post_id>',methods = ['POST'])
-
 def create_comment(post_id):
     text = request.form.get('text')
-    post = Post.query.filter_by(id = post_id).first()
+    post = Post.query.filter_by(pid = post_id).first()
     if not current_user.is_authenticated:
         flash('❗ Login First to Comment!!','danger')
         return redirect(url_for('login'))
@@ -154,7 +154,22 @@ def create_comment(post_id):
         db.session.add(comment)
         db.session.commit()
         flash('✔ Comment Posted...','success')
+        
     else:
         flash('❌ Post Doesnot Exist ...','danger')
 
     return redirect(url_for('posts'))
+
+
+@app.route('/delete-post/<int:post_id>',methods = ['POST'])
+def delete_post(post_id):
+    post = Post.query.filter_by(pid=post_id).first()
+    comment = Comments.query.filter_by(post_id=post_id).all()
+    
+    post.query.delete()
+    for c in comment:
+        c.query.delete()
+    
+    db.session.commit()
+    flash('✔ Post Deleted ... ','success')
+    return redirect(url_for('account'))
