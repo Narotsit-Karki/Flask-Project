@@ -1,82 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/feather-icons"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style type="text/css">
-
-
-.container:before {
-    content: '';
-    position: absolute;
-    #top: 0;
-    #left: 0;
-    #right: 0;
-    bottom: 0;
-}
-.container:before {
-    box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
-}
-.container:before {
-    box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
-    filter: blur(10px);
-}
-
-.container {
-    background: inherit;
-}
-
-.container:before {
-    background: inherit;
-}
-    .btn{
-        border: none;
+	
+	img{
+        height: 125px;
+        width: 125px;
         }
 
-.heart {
-  width: 90px;
-  height: 90px;
-  position: relative;
-  left: 5%;
-  bottom:70px;
-  background: url("https://cssanimation.rocks/images/posts/steps/heart.png") no-repeat;
-  background-position: 0 0;
-  cursor: pointer;
-  transition: background-position 1s steps(28);
-  transition-duration: 0s;
-
-  &.is-active {
-    transition-duration: 1s;
-    background-position: -2800px 0;
-  }
-}
-
-
-
 </style>
+<div class = "content-section">
+    <div class = "media">
+            <img class= "rounded-circle account-img" src = "/static/profile_pics/{{authour.image_file}}">
+            <div class = "media-body" style=" margin-left: 2%; position: relative;">
 
-<script>
+                <h2 class = "account-heading">
+                        {{authour.username}}
+                </h2>
+                 <a href="mailto:{{current_user.email}}" style="text-decoration: none">{{current_user.email}}</a> 
+              
 
-  // or alternatively
-  // return text.replace(urlRegex, '<a href="$1">$1</a>')
-  }
+            </div>
+    </div>
 
-</script>
-<!--    <div class = "container">-->
-<body background="{{back_path}}">
-<div class='container' style="padding: 1%;">
-    <h2 class="text-muted" style = "text-align:center; color: white;">
-        POSTS
-    </h2>
+<br>
+<h4 class = 'text-muted' style="color: purple; margin-left: 2%;">POSTS FROM {{authour.username}} </h4>   
+</br>
 
-    {% if current_user.is_authenticated %}
-     <a href = "{{url_for('new_post') }}"><div class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" title="Add a new post" style="font-size:250%; color:white;"> </div> </a>
-    {% endif %}
-    {% for post in post_datas %}
+{% for post in authour.post[-1::-1]%}
     <div style="padding:2%;"></div>
-    <div class="card text-black" style="...">
+    <div class="card text-black" style="border-color: purple;">
         <div class="card-body">
             <h5 class="card-title" style= "color:purple;">{{post.title}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">              
@@ -105,8 +58,8 @@
                             <button type = "submit" class = "btn btn-success">Submit</button>
 
                         </div>
-            {% for comment in comments %}
-                        {% if comment.post_id == post.pid %}
+            {% for comment in post.posts_comments[-1::-1] %}
+                        <!-- {% if comment.post_id == post.pid %} -->
                             <div class="collapse" id= post_1 style="padding : 1rem;">
                                 <div class="card card-body" style="padding: 1rem;">
                                 <h6 class="card-subtitle mb-1 text-muted"> <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 4%; height: auto;"> @{{ comment.comment_user.username }}</h6>
@@ -127,8 +80,6 @@
 
     {% endfor %}
 </div>
-<!--    </div>-->
+
 
 {% endblock content %}
-
-</body>

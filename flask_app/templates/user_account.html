@@ -31,6 +31,7 @@
                 <h2 class = "account-heading">
                         {{current_user.username}}
                 </h2>
+<!--                 <a href="mailto:{{current_user.email}}" style="text-decoration: none">{{current_user.email}}</a> -->
                 <p class = 'text-secondary'> {{current_user.email}} </p>
 
             </div>
@@ -93,7 +94,7 @@
 </div>
 </body>
 <body>
-<div class='container' style="padding: 2%;height: auto; background-color:#581845;">
+<div class='container' style="padding: 2%;height: auto; background-color:#581845;margin-bottom: 10%;border-radius: 12px;">
     <h2  style ="text-align:center;text-color: white;">
         POSTS FROM YOU
     </h2>
@@ -108,7 +109,7 @@
             <h5 class="card-title" style= "color:purple;">{{post.title}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">
 <!--                <form method='POST'>-->
-                <img class= "rounded-circle account-img" src = '/static/profile_pics/{{post.author.image_file}}' style = "width: 55px; height: 55px;"> @<a href="#" name="Author">{{post.author.username}}</a>
+                <img class= "rounded-circle account-img" src = '/static/profile_pics/{{post.author.image_file}}' style = "width: 55px; height: 55px;"> @<a href="/authour/{{post.author.username}}" name="Author" style="text-decoration: none;">{{post.author.username}}</a>
 
 <!--                </form>-->
             </h6>
@@ -123,12 +124,31 @@
                 <i class = "fa fa-comments-o" style="font-size: 190%;color:purple;padding-left:5%;"></i>
                 
             </button>
-            <form method = 'POST' action = "/delete-post/{{post.pid}}"style='margin-left: 5%;'>
-            <button type = "submit", class = "btn btn-danger" style="marging-left: 5%;font-size: 20px;padding: 4%;">Delete</button>
-            </form>
 
-            <form method = 'POST' action = "/edit-post/{{post.pid}}" style="margin-left: 10%;">
-                 <button type = "submit", class = "btn btn-primary" style="font-size:21px;padding: 4%;">Edit</button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" style="border-radius: 12px;margin-left: 5%;height:  5%;">Delete</button>
+            
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the post ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form method = 'POST' action = "/delete-post/{{post.pid}}">
+        <button type="submit" class="btn btn-primary">Confirm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+            <form method = "GET" action = "/edit-post/{{current_user.username}}/{{post.pid}}" style="margin-left: 10%; height: 5%;">
+                <button type = "submit" class = "btn btn-primary" style="border-radius: 12px;font-size:21px;padding: 4%;">Edit</button>
             </form>
 
         </div>
@@ -168,5 +188,9 @@
 
 
 </body>
+
+
+
+
 {% endblock content %}
 </html>

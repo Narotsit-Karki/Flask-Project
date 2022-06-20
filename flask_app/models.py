@@ -28,7 +28,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable = False, default = datetime.utcnow())
     content = db.Column(db.Text, nullable= False)
     user_id = db.Column(db.Integer,db.ForeignKey('users.uid'),nullable =False)
-    posts_comments = db.relationship('Comments', backref = 'comment_post',lazy = True, passive_deletes = True)
+    posts_comments = db.relationship('Comments', backref = 'comment_post',lazy = True)
     def __repr__(self):  # how our object is printed
         return f"Post('{self.title}' , {self.content},'{self.date_posted}')"
 
@@ -38,7 +38,9 @@ class Comments(db.Model):
     comment_uid = db.Column(db.Integer,db.ForeignKey('users.uid'),nullable = False)
     date_commented = db.Column(db.DateTime,default=datetime.utcnow())
     comment = db.Column(db.Text,nullable= False)
-    post_id = db.Column(db.Integer,db.ForeignKey('post.pid', on_delete = "CASCADE"), nullable = False)
+    post_id = db.Column(db.Integer,db.ForeignKey('post.pid'), nullable = False)
+    
+    #comment_reply = db.relationship('Comments', backref = 'comment_reply',lazy = True)
 
 
     def __repr__(self):

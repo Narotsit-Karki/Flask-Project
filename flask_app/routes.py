@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 import hashlib, binascii , secrets , os
-from flask_app.forms import Registration_Form,Login_Form, Update_Account_Form , Post_Form
+from flask_app.forms import Registration_Form,Login_Form, Update_Account_Form , Post_Form , Edit_Post_Form
 from flask_app.models import Users, Post, Comments
 import  os
 from PIL import Image
@@ -29,9 +29,9 @@ def home():
 @app.route('/posts', methods=['GET', 'POST'])
 def posts():
     post_datas = Post.query.all()
-
     comments = Comments.query.all()
-
+    post_datas = post_datas[-1::-1]
+    comments = comments[-1::-1]
 
 
     back_path = url_for('static',filename='background.jpg')
@@ -104,9 +104,10 @@ def update_profile_pic(profile_pic):
 @login_required # to prevent from not logged users to not to get account.html webpage
 def account():
     form = Update_Account_Form()
-    post = Post.query.filter_by(user_id=current_user.uid)
+    post = Post.query.filter_by(user_id=current_user.uid).all()
     comment = Comments.query.all()
-
+    post = post[-1::-1]
+    comment = comment[-1::-1]
     if form.validate_on_submit():
         if form.profile_pic.data:
             pic_file = update_profile_pic(form.profile_pic.data)
@@ -126,7 +127,7 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    return render_template('user_account.html',title="Acount",form = form , post_datas = post, comments = comment , image_file = url_for('static',filename='profile_pics/' + current_user.image_file))
+    return render_template('user_account.html',title="Account",form = form , post_datas = post, comments = comment , image_file = url_for('static',filename='profile_pics/' + current_user.image_file))
 
 @app.route('/posts/new',methods=['GET','POST'])
 @login_required
@@ -162,14 +163,47 @@ def create_comment(post_id):
 
 
 @app.route('/delete-post/<int:post_id>',methods = ['POST'])
+@login_required
 def delete_post(post_id):
+    print(post_id)
     post = Post.query.filter_by(pid=post_id).first()
     comment = Comments.query.filter_by(post_id=post_id).all()
-    
-    post.query.delete()
+    print(post.content)
+    db.session.delete(post)
     for c in comment:
-        c.query.delete()
+        db.session.delete(c)
     
     db.session.commit()
     flash('✔ Post Deleted ... ','success')
     return redirect(url_for('account'))
+
+
+@app.route('/authour/<string:authour_name>',methods=['GET'])
+def users_information(authour_name):
+    authour = Users.query.filter_by(username=authour_name).first()
+    authour = authour
+    return render_template('authour_info_page.html',title = authour_name , authour = authour)
+
+
+@app.route('/edit-post/<string:user>/<int:post_id>' , methods = ['GET','POST'])
+@login_required
+def edit_post(user,post_id):
+    form = Edit_Post_Form()
+    posts = current_user.post
+    for post in posts:
+        if post.pid == post_id:
+            post = post 
+            break
+    
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('✔ Post Updated Sucessfully ...')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+   
+
+    return render_template('edit_post.html',title = 'Edit Post' ,post = post, form = form)
