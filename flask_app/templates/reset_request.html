@@ -5,8 +5,8 @@
 <style>
 
 .container {
-  width: 90%;
-  height: 80%;
+  width: 80%;
+  height: 100%;
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
   border-radius: 5px;
   position: relative;
@@ -16,18 +16,18 @@
   margin-top: 5%;
   margin-bottom: 1%;
 }
-
+ 
 </style>
-
+<!-- <body background = "static/background_1.jpg" style="background-size: 100% 180%;background-repeat: no-repeat;"> -->
 <div class = "container">
 
-<form method = "POST" action="" style="padding: 3%;">
+<form method = "POST" action="",>
          {{ form.hidden_tag() }}
 <!--         adding csrf token-->
 
         <fieldset class = "form-group">
             <legend class = "border-bottom mb-4">
-                Welcome, Back
+                Reset Password
                 <div class = "form-group">
                      <div class = "form-group">
                     {{ form.email.label(class = "form-control-label") }}
@@ -41,48 +41,19 @@
                     {% else %}
                         {{ form.email(class = "form-control form-contorl-md", placeholder = "Enter your Email...") }}
                     {% endif %}
-                </div>
-                     <div class = "form-group">
-                    {{ form.password.label(class = "form-control-label") }}
-                    {% if form.password.errors %}
-                    {{ form.email(class = "form-control form-control-lg is-invalid")}}
-                        <div class= "invalid-feedback">
-                        {% for error in form.password.errors %}
-                        <span> {{error}} </span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-
-                        {{form.password(class = "form-control form-control-md", placeholder = "Enter your Password...") }}
-                    {% endif %}
-                
-                </div>
+        
                 </div>
             </legend>
         </fieldset>
-         <div class="form-check">
-            {{ form.remember_me(class = "form-check-input") }}
-            {{ form.remember_me.label(class = "form-check-label") }}
-
-        </div>
 
         <div class = "form-group" style="padding: 2%;">
             {{ form.submit(class = "btn btn-primary") }}
         </div>
-        <small class = "text-muted ml-2">
-        <a href = "{{url_for('reset_password_request')}}"> Forgot Password ? </a>
-        </small>
+       
     </form>
 </div>
 
-<div class = "border-top pt-3">
-    <small style="font-size:15px;color:white;margin-left: 15%;">
-        Dont Have an Account ? <a class = "ml-2" style="color: white;" href = "{{url_for('register')}}">
-        Register
-    </a>
-<!--  here above url_for('login') denotes our login function in the flask_app.py      -->
-    </small>
-</div>
+
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <nav class="navbar fixed-bottom navbar-dark bg-dark" style="margin-top: 5%;">

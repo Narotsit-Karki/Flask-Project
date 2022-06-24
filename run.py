@@ -1,5 +1,8 @@
 from flask_app import app
+import socket
+host = socket.gethostname()
+host_ip = socket.gethostbyname(host)
 host1 = 'localhost'
-host2 = '192.168.1.13'
+
 if __name__ == '__main__':
-    app.run(debug=True, host = host1, port=80)
+    app.run(debug=True, host = host_ip, port=80)

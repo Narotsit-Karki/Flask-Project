@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<style type="text/css">
+   .container {
+  width: 90%;
+  height: 100%;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  overflow: hidden;
+  margin-top: 5%;
+  margin-bottom: 1%;
+}
+
+</style>
+<!-- <body background="static/background_1.jpg",  style = "background-size: 160% 150%; background-repeat: no-repeat;"> -->
+<div class = "container">
+    <form method = "POST" action="">
+         {{ form.hidden_tag() }}
+<!--         adding csrf token-->
+        <fieldset class = "form-group">
+            <legend class = "border-bottom mb-4"> Reset Password
+                     <div class = "form-group">
+                    {{ form.password.label(class = "form-control-label") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class = "form-control form-control-md is-invalid") }}
+                        <div class = "invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span> {{ error }} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class = "form-control form-control-md",placeholder = 'Enter a new password...') }}
+                    {% endif %}
+                </div>
+                     <div class = "form-group">
+                    {{ form.confirm_password.label(class = "form-control-label") }}
+                         {% if form.confirm_password.errors %}
+                            {{ form.confirm_password(class = "form-control form-control-md is-invalid")}}
+                                <div class = "invalid-feedback">
+                                    {% for error in form.confirm_password.errors %}
+                                        <span> {{ error }} </span>
+                                    {% endfor %}
+                                </div>
+                        {% else %}
+                            {{ form.confirm_password(class = "form-control form-control-md",placeholder = "Enter password again...") }}
+                         {% endif %}
+                </div>
+            </legend>
+        </fieldset>
+        <div class = "form-group" style="padding: 5%;">
+            {{ form.submit(class = "btn btn-primary") }}
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

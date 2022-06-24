@@ -6,89 +6,50 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
-
-
-.container:before {
-    content: '';
-    position: absolute;
-    #top: 0;
-    #left: 0;
-    #right: 0;
-    bottom: 0;
-}
-.container:before {
-    box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
-}
-.container:before {
-    box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
-    filter: blur(10px);
-}
-
 .container {
-    background: inherit;
-}
-
-.container:before {
-    background: inherit;
-}
-    .btn{
-        border: none;
-        }
-
-.heart {
-  width: 90px;
-  height: 90px;
+  width: 90%;
+  #height: 80%;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+  border-radius: 5px;
   position: relative;
-  left: 5%;
-  bottom:70px;
-  background: url("https://cssanimation.rocks/images/posts/steps/heart.png") no-repeat;
-  background-position: 0 0;
-  cursor: pointer;
-  transition: background-position 1s steps(28);
-  transition-duration: 0s;
-
-  &.is-active {
-    transition-duration: 1s;
-    background-position: -2800px 0;
-  }
+  z-index: 1;
+  background: inherit;
+  overflow: hidden;
+  margin-top: 4%;
+  margin-bottom: 1%;
 }
-
-
 
 </style>
 
 <script>
 
-  // or alternatively
-  // return text.replace(urlRegex, '<a href="$1">$1</a>')
-  }
-
 </script>
+
 <!--    <div class = "container">-->
-<body background="{{back_path}}">
-<div class='container' style="padding: 1%;">
+<body background="{{back_path}}" style="background-size:100% 100%; background-repeat:repeat;"> 
+ <!-- <body background = ''>  -->
+<div class='container' style="padding: 3%"><!-- 
     <h2 class="text-muted" style = "text-align:center; color: white;">
-        POSTS
-    </h2>
+    </h2> -->
 
     {% if current_user.is_authenticated %}
      <a href = "{{url_for('new_post') }}"><div class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" title="Add a new post" style="font-size:250%; color:white;"> </div> </a>
     {% endif %}
-    {% for post in post_datas %}
+    {% for post in post_datas.items %}
     <div style="padding:2%;"></div>
-    <div class="card text-black" style="...">
+    <div class="shadow p-3 mb-5 bg-white rounded card text-black" style="...">
         <div class="card-body">
             <h5 class="card-title" style= "color:purple;">{{post.title}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">              
-                <img class= "rounded-circle account-img" src = '/static/profile_pics/{{post.author.image_file}}' style = "width: 55px; height: 55px;"> 
+            <h6 class="card-subtitle mb-2 text-muted">     
+                <img src= "/static/profile_pics/{{post.author.image_file}}" alt ='Avatar' class = 'avatar' style="object-fit: cover;vertical-align: middle;width: 50px;height: 50px;border-radius: 50%;">         
+                <!-- <img class= "rounded-circle account-img" src = '/static/profile_pics/{{post.author.image_file}}' style = "width: 55px; height: 55px;object-fit: cover;">  -->
               
-                @<a name="Author" href = "/authour/{{post.author.username}}" style="text-decoration: none;">{{post.author.username}}</a>
+                @<a name="Author" href = "/authour/{{post.author.username}}/1" style="text-decoration: none;">{{post.author.username}}</a>
                
             </h6>
-            <h6 class="card-subtitle mb-1 text-muted">{{ post.date_posted.strftime('%B, %d %Y') }}</h6>
-
-            <p class="card-text" style = "text-align: justify; letter-spacing: 1px;" id="content">{{post.content}}</p>
-
+            <h6 class="card-subtitle mb-1 text-muted">{{ post.date_posted.strftime('%B %d, %Y') }}</h6>
+            
+            <p class="card-text" style = "white-space: pre-line;letter-spacing: 1px;" id="content">{{post.content}}</p>
 
 
             <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.pid}}
@@ -96,7 +57,7 @@
                 <i class = "fa fa-comments-o" style="font-size: 190%;color:purple"></i>
             </button>
 
-            <div class="collapse" id= post_{{post.pid}} style="padding : 1rem;">
+            <div class="collapse" id= post_{{post.pid}} style="padding : 1rem; width: 100%;">
 
                 <div class="card card-body" style="padding: 1rem;">
                     <form method="POST" action="/create-comment/{{post.pid}}">
@@ -105,16 +66,17 @@
                             <button type = "submit" class = "btn btn-success">Submit</button>
 
                         </div>
-            {% for comment in comments %}
-                        {% if comment.post_id == post.pid %}
-                            <div class="collapse" id= post_1 style="padding : 1rem;">
-                                <div class="card card-body" style="padding: 1rem;">
-                                <h6 class="card-subtitle mb-1 text-muted"> <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 4%; height: auto;"> @{{ comment.comment_user.username }}</h6>
+            {% for comment in post.posts_comments%}
+
+                        <!-- {% if comment.post_id == post.pid %} -->
+                            <div class="collapse" id= post_{{post.pid}} >
+                                <div class="card card-body" style="padding: 1rem;width: 100%;">
+                                <h6 class="card-subtitle mb-1 text-muted"> <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 9%; height: 9%;"><a href = "/authour/{{comment.comment_user.username}}?page=1" style="text-decoration:none;">@{{ comment.comment_user.username}}</a></h6>
                                 <h6 class="card-subtitle mb-0 text-muted">{{comment.date_commented.strftime('%B, %d %Y')}}</h6>
-                                <p class="card-text">{{comment.comment}}</p>
+                                <p class="card-text" style = "white-space: pre-line;">{{comment.comment}}</p>
                             </div>
                           </div>
-                                {% endif %}
+                          <!-- {% endif %} -->
             {% endfor %}
 
                     </form>
@@ -126,9 +88,31 @@
 
 
     {% endfor %}
+
 </div>
-<!--    </div>-->
+<div style="margin-left: 10%;">
+{% for page_no in post_datas.iter_pages(left_edge = 1, right_edge = 1 , left_current = 1 , right_current = 2) %}
+    {% if page_no %}
+        {%if post_datas.page == page_no %}
+            <a class = "mb-4" href = "{{url_for('posts',page = page_no)}}"><button style="color: purple;font-size: 20px;border: none; border-radius:5px;background-color:white;">{{page_no}}</button></a>
+        {% else %}
+
+            <a class = "mb-4" href = "{{url_for('posts',page = page_no)}}"><button style="color: white;font-size: 20px;border: none; border-radius:5px;background-color: purple;">{{page_no}}</button></a>
+        {% endif %}
+    {% else %}
+    ...
+    {% endif %}
+{%endfor %}
+</div>
+
+<nav class="navbar bottom navbar-dark bg-dark" style="margin-top: 5%;">
+  <a class="navbar-brand" href="/posts" >
+    <img src="/static/velvet.ico" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-left: 3%;"> Velvet Posts
+    <a class = "navbar-brand fa fa-github" href = "https://www.github.com/Narotsit-Karki" style="font-size:22px;"> <label style="font-family:myFirstFont;">Narotsit</label></a>
+</a>
+</nav>
 
 {% endblock content %}
+
 
 </body>
