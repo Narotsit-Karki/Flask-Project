@@ -23,7 +23,7 @@ class Registration_Form(FlaskForm):
             raise ValidationError('❗ Email already taken !! Enter a different email')
 
 class Login_Form(FlaskForm):
-    email = StringField('Email',validators=[DataRequired(),Email()])
+    email = StringField('Username or Email',validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=10)])
     remember_me = BooleanField('Remember Me') # for cookies
     submit = SubmitField('Log in')

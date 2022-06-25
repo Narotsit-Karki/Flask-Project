@@ -14,9 +14,9 @@ class Users(db.Model,UserMixin):
     email = db.Column(db.String(100),unique = True, nullable = False)
     image_file = db.Column(db.String(20),nullable=False , default = 'default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    post = db.relationship('Post', backref = 'author', lazy = True)  #backref similar to adding column
-    comment = db.relationship('Comments', backref = 'comment_user', lazy = True)
-    
+    post = db.relationship('Post', backref = 'author', passive_deletes = True , lazy = True)  #backref similar to adding column
+    comment = db.relationship('Comments', backref = 'comment_user', passive_deletes = True, lazy = True)
+    likes = db.relationship('Likes', backref = 'users_likes', passive_deletes = True, lazy = True)
     def __repr__(self): # how our object is printed
         return f"Users('{self.username}' , '{self.email}','{self.image_file}')"
 
@@ -43,18 +43,20 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable =False)
     date_posted = db.Column(db.DateTime, nullable = False)
     content = db.Column(db.Text, nullable= False)
-    user_id = db.Column(db.Integer,db.ForeignKey('users.uid'),nullable =False)
-    posts_comments = db.relationship('Comments', backref = 'comment_post',lazy = True)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.uid',ondelete = "CASCADE") ,nullable =False)
+    posts_comments = db.relationship('Comments', backref = 'comment_post', passive_deletes = True , lazy = True)
+    likes = db.relationship('Likes', backref = 'posts_likes', passive_deletes =True, lazy = True)
     def __repr__(self):  # how our object is printed
         return f"Post('{self.title}' , {self.content},'{self.date_posted}')"
 
 
 class Comments(db.Model):
     cid = db.Column(db.Integer, primary_key = True,autoincrement= True)
-    comment_uid = db.Column(db.Integer,db.ForeignKey('users.uid'),nullable = False)
+
     date_commented = db.Column(db.DateTime)
     comment = db.Column(db.Text,nullable= False)
-    post_id = db.Column(db.Integer,db.ForeignKey('post.pid'), nullable = False)
+    post_id = db.Column(db.Integer,db.ForeignKey('post.pid', ondelete = "CASCADE"),nullable = False)
+    comment_uid = db.Column(db.Integer,db.ForeignKey('users.uid' , ondelete = "CASCADE") , nullable = False)
     
     #comment_reply = db.relationship('Comments', backref = 'comment_reply',lazy = True)
 
@@ -64,3 +66,9 @@ class Comments(db.Model):
 
 
 
+class Likes(db.Model):
+    lid = db.Column(db.Integer, primary_key = True,autoincrement= True)
+    post_id = db.Column(db.Integer,db.ForeignKey('post.pid', ondelete = "CASCADE") , nullable = False)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.uid', ondelete = "CASCADE") , nullable = False)
+    def __repr__(self):
+        return f"Likes('{self.post_id},'{self.user_id}')"

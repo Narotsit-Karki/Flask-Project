@@ -1,14 +1,16 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request , jsonify
 import hashlib, binascii , secrets , os
 from flask_app.forms import Reset_Password_Form,Request_Reset_Form,Registration_Form,Login_Form, Update_Account_Form , Post_Form , Edit_Post_Form
-from flask_app.models import Users, Post, Comments
+from flask_app.models import Users, Post, Comments , Likes
 import  os
 from PIL import Image
+import re
 
 from flask_app import app, db , bcrypt , mail
 from flask_login import login_user,current_user,logout_user, login_required
 from datetime import datetime
 from flask_mail import Message
+
 # def generate_hash(password):
 #     psd = password.encode("utf-8")
 #     salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
@@ -37,17 +39,14 @@ def error_403(error):
     return render_template('errors/403.html',title = 'Error 403') , 403
 
 
+
+
 @app.route('/')
 @app.route('/posts', methods=['GET', 'POST'])
 def posts():
+    
     page = request.args.get('page' , 1 , type = int)
-
-    post_datas = Post.query.order_by(Post.date_posted.desc()).paginate(per_page = 2,page = page)
-    #comments = Comments.query.all()
-    #comments = comments[-1::-1]
-    # print(comments)
-    for post in post_datas.items:
-        print(post)
+    post_datas = Post.query.order_by(Post.date_posted.desc()).paginate(per_page = 4,page = page)
     back_path = url_for('static',filename='background.jpg')
     return render_template('posts.html', title='Posts', post_datas=post_datas,back_path = back_path)
 
@@ -65,15 +64,25 @@ def login():
 
     form = Login_Form()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password,form.password.data):
-
-            login_user(user,remember=form.remember_me.data)
-            next_page = request.args.get('next')
-            flash(f"✔ Logged in successfully ... Welcome, {user.username}", 'success')
-            return redirect(next_page) if next_page else redirect(url_for('posts'))
+        regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+        if (re.search(regex,form.email.data)):
+            user = Users.query.filter_by(email=form.email.data).first()
+            if not user:
+                form.email.errors = ['Email not found']
         else:
-            flash("❌ login Failed ... Check email or password.",'danger')
+            user = Users.query.filter_by(username = form.email.data).first()
+            if not user:
+                form.email.errors = ['Username not found']
+
+
+        if user:
+            if bcrypt.check_password_hash(user.password,form.password.data):
+                login_user(user,remember=form.remember_me.data)
+                next_page = request.args.get('next')
+                flash(f"✔ Logged in successfully ... Welcome, {user.username}", 'success')
+                return redirect(next_page) if next_page else redirect(url_for('posts'))
+            else:
+                flash("❌ login Failed ... Check password.",'danger')
 
     return render_template('login.html', form=form, title='Login')
 
@@ -162,7 +171,7 @@ def create_comment(post_id):
         return redirect(url_for('login'))
 
     if post:
-        print(post,text,current_user)
+      
         comment = Comments(comment = text,comment_user = current_user,comment_post = post, date_commented = datetime.utcnow())
         db.session.add(comment)
         db.session.commit()
@@ -180,7 +189,7 @@ def delete_post(post_id):
     
     post = Post.query.filter_by(pid=post_id).first()
     comment = Comments.query.filter_by(post_id=post_id).all()
-    print(post.content)
+    #print(post.content)
     db.session.delete(post)
     for c in comment:
         db.session.delete(c)
@@ -266,3 +275,31 @@ def send_reset_email(user):
     mail.send(msg)
 
 
+@app.route('/like-post/<post_id>',methods = ['GET','POST'])
+@login_required
+def like_post(post_id):
+    post  = Post.query.filter_by(pid = post_id).first()
+    like = Likes.query.filter_by(user_id = current_user.uid , post_id = post_id).first()
+    if not post:
+       return jsonify({'error':'Post does not exist.'},400)
+    elif like:
+        db.session.delete(like)
+        db.session.commit()
+    else:
+        like = Likes(user_id = current_user.uid, post_id = post_id)
+        db.session.add(like)
+        db.session.commit()
+    
+    return jsonify({"likes": len(post.likes),'liked': current_user.uid in map(lambda x: x.users_likes,post.likes)})
+
+@app.route('/delete-comment/<comment_id>',methods = ['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comments.query.filter_by(cid = comment_id).first()
+    if comment:
+        db.session.delete(comment)
+        db.session.commit()
+        flash('Comment deleted','success')
+        return redirect(url_for('posts'))
+    else:
+        flash('Comment already deleted','info')

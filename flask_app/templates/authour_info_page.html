@@ -1,122 +1,190 @@
 {% extends 'layout.html' %}
-<link rel="shortcut icon" href="{{ url_for('static', filename='velvet.ico') }}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-{% block content %}
 
+{% block content %}
+<script type="text/javascript" src="{{url_for('static', filename = 'posts.js')}}"></script>
 <style>
     .container{
+        width: 100%;
+        height: auto;
         margin-top: 1%;
         margin-bottom: 5%;
-        background-color: white;
+        background-color:#CBC3E3;
         border-radius: 25px;
     }
 
-        .rounded-circle{
-        height: 125px;
-        width: 125px;
-        object-fit: cover;
-        }
+    .rounded-circle{
+    height: 125px;
+    width: 125px;
+    object-fit: cover;
+    }
+@keyframes fa-pulse-click {
+  0%  { transform:scale(1); }
+  50%  { transform:scale(1.50); }
+  100% { transform:scale(1); }
+}
+
+.fa{
+  position:absolute;
+  margin-left: 1%;
+  font-size: 35px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa:hover{
+  color: red;
+}
+
+.heart {
+  color:red;
+}
 
 </style>
 <!-- <body background="/static/background.jpg" style="background-size: 100% 100%;"> -->
-<div class = 'container'>
-<div class = "content-section">
-    <div class = "media">
-            <img class= "rounded-circle account-img" src = "/static/profile_pics/{{authour.image_file}} "style ="height: 125px; width: 125px; margin-left:2%; margin-top:2%; margin-bottom:2%;">
-            <div class = "media-body" style=" margin-left: 2%; position: relative;">
+<div class='container'>
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="/static/profile_pics/{{authour.image_file}} "
+                 style="height: 125px; width: 125px; margin-left:2%; margin-top:2%; margin-bottom:2%;">
+            <div class="media-body" style=" margin-left: 2%; position: relative;">
 
-                <h2 class = "account-heading">
-                        {{authour.username}}
+                <h2 class="account-heading">
+                    {{authour.username}}
                 </h2>
-                <a href="mailto:{{authour.email}}" style="text-decoration: none;">{{authour.email}}</a> 
+                <a href="mailto:{{authour.email}}" style="text-decoration: none;">{{authour.email}}</a>
 
             </div>
-    </div>
+        </div>
 
 
-{% if not post_datas.items %}
-    <br>
-    <h4 class="text-muted"> No posts from {{authour.username}}  </h4>
+        {% if not post_datas.items %}
+        <h4 class="text-muted"> No posts from {{authour.username}} </h4>
     </div>
-{% else %}
-<br>
-<h4 class = 'text-muted' style="color: purple; margin-left: 2%;">Posts From {{authour.username}} </h4>   
-</br>
-{% endif %}
-{% for post in post_datas.items %}
-    <div style="padding:2%;">
+    {% else %}
+    <br/>
+    <h4 class='text-muted' style="color: purple; margin-left: 2%;">Posts From {{authour.username}} </h4>
+
+    {% endif %}
+    {% for post in post_datas.items %}
     <div class="shadow p-3 mb-5 bg-white rounded card text-black" style=" border:25px;border-color: purple;">
         <div class="card-body">
-            <h5 class="card-title" style= "color:purple;padding-bottom:2%">{{post.title}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">              
-                <img src= "/static/profile_pics/{{post.author.image_file}}" alt ='Avatar' class = 'avatar' style="object-fit: cover;vertical-align: middle;width: 50px;height: 50px;border-radius: 50%;">
+            <h5 class="card-title" style="color:purple;padding-bottom:2%">{{post.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <img src="/static/profile_pics/{{post.author.image_file}}" alt='Avatar' class='avatar'
+                     style="object-fit: cover;vertical-align: middle;width: 50px;height: 50px;border-radius: 50%;">
                 <!-- <img class= "rounded-circle account-img" src = '/static/profile_pics/{{post.author.image_file}}' style = "width: 55px; height: 55px;">  -->
-              
-                @<a name="Author" href = "/authour/{{post.author.username}}/1" style="text-decoration: none;">{{post.author.username}}
-                
-                </a>
-               {% set authour_name = post.author.username %}
+
+                @<a name="Author" href="/authour/{{post.author.username}}/1" style="text-decoration: none;">{{post.author.username}}
+            </a>
+                <button type="button" class="btn btn-primary"
+                        style="color: purple;border: none;border-radius: 25px;background-color: #CBC3E3;" disabled>
+                    <span style="padding: 1%;" id='like-count-{{post.pid}}' class="badge badge-secondary">Liked by {{post.likes|length}} people</span>
+
+                </button>
+                {% set authour_name = post.author.username %}
             </h6>
 
             <h6 class="card-subtitle mb-1 text-muted"> {{ post.date_posted.strftime('%B, %d %Y') }}</h6>
 
-            <p class="card-text" style = "white-space: pre-line;ext-align: justify; letter-spacing: 1px;" id="content">{{post.content}}</p>
+            <p class="card-text" style="white-space: pre-line;ext-align: justify; letter-spacing: 1px;" id="content">
+                {{post.content}}</p>
 
 
-            <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.pid}}
-                    aria-expanded="false" aria-controls="collapseExample">
-                <i class = "fa fa-comments-o" style="font-size: 190%;color:purple"></i>
-            </button>
+            <div class="btn-group">
+                <button type="button" class="btn" data-bs-toggle="collapse" data-bs-target=#post_{{post.pid}}
+                        aria-expanded="false" aria-controls="collapseExample"
+                        style="color: purple;border: none;border-radius: 25px;background-color: #CBC3E3;"> comments
+                    <span class="badge">{{post.posts_comments|length}}</span>
 
-            <div class="collapse" id= post_{{post.pid}} style="padding : 1rem;">
+                </button>
+            </div>
+            <!-- <button type="button" class="btn btn-primary" style="color: purple;border: none;border-radius: 25px;background-color: #CBC3E3;" disabled>
+                     <span style = "padding: 1%;" id = 'like-count-{{post.pid}}' class="badge badge-secondary">Liked by {{post.likes|length}} people</span>
+
+                    </button> -->
+            {% if current_user.is_authenticated %}
+            {% if current_user in post.likes|map(attribute="users_likes")|list %}
+
+            <i onclick="startAni(this,{{post.pid}})" id='like-post-{{post.pid}}' class="fa heart fa-heart"
+               style="font-size:35px;color: red;">
+
+            </i>
+
+
+            {% else %}
+
+
+            <i id="like-post-{{post.pid}}" onclick="startAni(this,{{post.pid}})"
+               class="fa heart fa-heart-o fa-pulse-click" style="position:absolute;"></i>
+
+
+            {% endif %}
+            {% endif %}
+                  </div>
+
+            <div class="collapse" id=post_{{post.pid}} style="padding : 1rem;">
 
                 <div class="card card-body" style="padding: 1rem;">
                     <form method="POST" action="/create-comment/{{post.pid}}">
-                        
+
                         <div class="input-group mb-3">
-                            <input type = "text" id = "text" name = "text" class = "form-control form-control-md" placeholder=" Write your comment" required />
-                            <button type = "submit" class = "btn btn-success">Submit</button>
+                            <input type="text" id="text" name="text" class="form-control form-control-md"
+                                   placeholder=" Write your comment" required/>
+                            <button type="submit" class="btn btn-success">Submit</button>
 
                         </div>
-            {% for comment in comments %}
-                        {% if comment.post_id == post.pid %}
-                            <div class="collapse" id= post_{{post.pid}} style="padding : 1rem;">
-                                <div class="card card-body" style="padding: 1rem;">
-                                <h6 class="card-subtitle mb-1 text-muted"> 
-                                    <img src= "/static/profile_pics/{{comment.comment_user.image_file}}" alt ='Avatar' class = 'avatar' style="object-fit: cover;vertical-align: middle;width: 40px;height: 40px;border-radius: 50%;">
-                                    <!-- <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 4%; height: auto;"> --> <a href ="/authour/{{comment
-                                    .comment_user.username}}/1" style="text-decoration:none;">@{{ comment.comment_user.username }}</h6>
-                                <h6 class="card-subtitle mb-0 text-muted">{{comment.date_commented.strftime('%B, %d %Y')}}</h6>
-                                <p class="card-text" style="white-space:pre-line;">{{comment.comment}}</p>
-                            </div>
-                          </div>
-                                {% endif %}
-            {% endfor %}
-
                     </form>
                 </div>
-
             </div>
-        </div>
-    </div>
-</div>
-    {% endfor %}
-</div>
-<div style="margin-left:5%;padding:5%;">
+                    {% for comment in comments %}
+                    {% if comment.post_id == post.pid %}
+                    <div class="collapse" id=post_{{post.pid}} style="padding : 1rem;">
+                        <div class="card card-body" style="padding: 1rem;">
+                            <h6 class="card-subtitle mb-1 text-muted">
+                                <img src="/static/profile_pics/{{comment.comment_user.image_file}}" alt='Avatar'
+                                     class='avatar'
+                                     style="object-fit: cover;vertical-align: middle;width: 40px;height: 40px;border-radius: 50%;">
+                                <!-- <img class= "rounded-circle account-img" src = "/static/profile_pics/default.jpg" style = "width: 4%; height: auto;"> -->
+                                <a href="/authour/{{comment
+                                    .comment_user.username}}/1" style="text-decoration:none;">@{{
+                                    comment.comment_user.username }}
+                                </a>
+                            </h6>
+                            <h6 class="card-subtitle mb-0 text-muted">{{comment.date_commented.strftime('%B, %d
+                                %Y')}}</h6>
+                            <p class="card-text" style="white-space:pre-line;">{{comment.comment}}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
 
-{% for page_no in post_datas.iter_pages(left_edge = 1, right_edge = 1 , left_current = 1 , right_current = 2) %}
-    {% if page_no %}
+     </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin-left:5%;padding:5%;">
+
+        {% for page_no in post_datas.iter_pages(left_edge = 1, right_edge = 1 , left_current = 1 , right_current = 2) %}
+        {% if page_no %}
         {%if post_datas.page == page_no %}
-            <a class = "mb-4" href = "/authour/{{authour.username}}/{{page_no}}"><button style="color: white;font-size: 20px;border: none; border-radius:5px;background-color:purple;">{{page_no}}</button></a>
+        <a class="mb-4" href="/authour/{{authour.username}}/{{page_no}}">
+            <button style="color: white;font-size: 20px;border: none; border-radius:5px;background-color:purple;">
+                {{page_no}}
+            </button>
+        </a>
         {% else %}
 
-            <a class = "mb-4" href = "/authour/{{authour.username}}/{{page_no}}"><button style="color: purple;font-size: 20px;border-color: purple; border-radius:5px;background-color: white;">{{page_no}}</button></a>
+        <a class="mb-4" href="/authour/{{authour.username}}/{{page_no}}">
+            <button style="color: purple;font-size: 20px;border-color: purple; border-radius:5px;background-color: white;">
+                {{page_no}}
+            </button>
+        </a>
         {% endif %}
-    {% else %}
-    ...
-    {% endif %}
-{%endfor %}
+        {% else %}
+        ...
+        {% endif %}
+        {%endfor %}
+    </div>
 </div>
-</div>
-</body>
-{% endblock content %}
+
+    {% endblock content %}

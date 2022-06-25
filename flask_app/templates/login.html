@@ -13,7 +13,7 @@
   z-index: 1;
   background: inherit;
   overflow: hidden;
-  margin-top: 5%;
+  margin-top: 3%;
   margin-bottom: 1%;
 }
 
@@ -39,7 +39,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.email(class = "form-control form-contorl-md", placeholder = "Enter your Email...") }}
+                        {{ form.email(class = "form-control form-contorl-md", placeholder = "Enter your Username or Email...") }}
                     {% endif %}
                 </div>
                      <div class = "form-group">
@@ -72,24 +72,20 @@
         <small class = "text-muted ml-2">
         <a href = "{{url_for('reset_password_request')}}"> Forgot Password ? </a>
         </small>
-    </form>
-</div>
-
-<div class = "border-top pt-3">
-    <small style="font-size:15px;color:white;margin-left: 15%;">
-        Dont Have an Account ? <a class = "ml-2" style="color: white;" href = "{{url_for('register')}}">
+        </form>
+    <div class = "border-top pt-3">
+        
+        <small style="...">
+        Dont Have an Account ? <a class = "ml-2" style="..." href = "{{url_for('register')}}">
         Register
     </a>
 <!--  here above url_for('login') denotes our login function in the flask_app.py      -->
     </small>
 </div>
+</div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<nav class="navbar fixed-bottom navbar-dark bg-dark" style="margin-top: 5%;">
-  <a class="navbar-brand" href="/posts" >
-    <img src="/static/velvet.ico" width="30" height="30" class="d-inline-block align-top" alt="" style="margin-left: 3%;"> Velvet Posts
-    <a class = "navbar-brand fa fa-github" href = "https://www.github.com/Narotsit-Karki" style="font-size:22px;"> <label style="font-family:myFirstFont;">Narotsit</label></a>
-</a>
-</nav>
+
+
+
 {% endblock content %}
 </body>
