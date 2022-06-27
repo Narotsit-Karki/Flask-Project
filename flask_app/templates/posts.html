@@ -1,9 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script -->>
-<!-- <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script> -->
+
 <script src="https://unpkg.com/feather-icons"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://kit.fontawesome.com/06da096c24.js" crossorigin="anonymous"></script>
@@ -32,7 +30,7 @@
                 <img src= "/static/profile_pics/{{post.author.image_file}}" alt ='Avatar' class = 'avatar' style="object-fit: cover;vertical-align: middle;width: 50px;height: 50px;border-radius: 50%;">         
               
                 @<a name="Author" href = "/authour/{{post.author.username}}/1" style="text-decoration: none;">{{post.author.username}}</a>
-                <button type="button" class="btn btn-primary" style="color: purple;border: none;border-radius: 25px;background-color: #CBC3E3;" disabled>
+                <button type="button" class="btn btn-primary" style="font-size:14px;color: purple;border: none;border-radius: 25px;background-color: #CBC3E3;" disabled>
                  <span style = "padding: 1%;" id = 'like-count-{{post.pid}}' class="badge badge-secondary">Liked by {{post.likes|length}} people</span>
                     
                 </button>
@@ -86,42 +84,36 @@
                                 <p class="card-text" style = "white-space: pre-line;">{{comment.comment}}</p>
                                     {% if comment.comment_user.uid == current_user.uid or post.author == current_user%}
 
-                        <div class = "col-2">
-                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:auto;">delete</button>
-
+                                        <div class = "col-2">
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:auto;">delete</button>
+                                        </div>
                                     {% endif %}
-                        </div>
+                                        
                             </div>
                           </div>
-
+                           
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete the comment ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <form method = 'POST' action = "/delete-comment/{{comment.cid}}">
-
-        <button type="submit" class="btn btn-primary">Confirm</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-                     
-                          
-            {% endfor %}
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                             <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete the comment ?
+                            </div>
+                        <div class="modal-footer">
+                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form method = 'POST' action = "/delete-comment/{{comment.cid}}">
+                            <button type="submit" class="btn btn-primary">Confirm</button>
+                         </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>   
-
+        {% endfor %}             
+    </div>
     {% endfor %}
-</div>
 
 <div style="margin-left: 10%;">
 {% for page_no in post_datas.iter_pages(left_edge = 1, right_edge = 1 , left_current = 1 , right_current = 2) %}
